@@ -1,4 +1,4 @@
-import 'package:demo_chat/counter/counter.dart';
+import 'package:demo_chat/app/go_router.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -6,12 +6,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(color: Color(0xFF13B9FF)),
       ),
-      home: const CounterPage(),
     );
   }
 }
