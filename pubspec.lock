@@ -311,7 +311,7 @@ packages:
     source: hosted
     version: "2.0.19"
   flutter_riverpod:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_riverpod
       sha256: "0f1974eff5bbe774bf1d870e406fc6f29e3d6f1c46bd9c58e7172ff68a785d7d"
@@ -336,6 +336,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.1.0"
+  hooks_riverpod:
+    dependency: "direct main"
+    description:
+      name: hooks_riverpod
+      sha256: "45b2030a18bcd6dbd680c2c91bc3b33e3fe7c323e3acb5ecec93a613e2fbaa8a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.1"
   html:
     dependency: transitive
     description:

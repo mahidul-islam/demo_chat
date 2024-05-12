@@ -17,8 +17,8 @@ dependencies:
   flutter_chat_ui: ^1.6.12
   flutter_firebase_chat_core: ^1.6.7
   flutter_hooks: ^0.20.5
-  flutter_riverpod: ^2.5.1
   go_router: ^14.1.0
+  hooks_riverpod: ^2.5.1
   http: ^1.2.1
   image_picker: ^1.1.1
   mime: ^1.0.5

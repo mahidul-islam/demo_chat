@@ -1,7 +1,6 @@
 import 'package:demo_chat/counter/provider/counter_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({super.key});
@@ -51,16 +50,12 @@ class CounterView extends StatelessWidget {
   }
 }
 
-class CounterText extends HookWidget {
+class CounterText extends HookConsumerWidget {
   const CounterText({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (BuildContext ctx, WidgetRef ref, _) {
-        final count = ref.watch(counterNotifier);
-        return Text('$count');
-      },
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(counterNotifier);
+    return Text('$count');
   }
 }
