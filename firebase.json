@@ -1,1 +1,52 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"fir-chat-9c443","appId":"1:455805989708:android:6f2774ae34d682ab5315e9","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"fir-chat-9c443","appId":"1:455805989708:ios:9eb6ea515a6f95175315e9","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"fir-chat-9c443","appId":"1:455805989708:ios:9eb6ea515a6f95175315e9","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"fir-chat-9c443","configurations":{"android":"1:455805989708:android:6f2774ae34d682ab5315e9","ios":"1:455805989708:ios:9eb6ea515a6f95175315e9","macos":"1:455805989708:ios:9eb6ea515a6f95175315e9","web":"1:455805989708:web:97091ea82a4743775315e9","windows":"1:455805989708:web:5db39ee36bd5b43c5315e9"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fir-chat-9c443",
+          "appId": "1:455805989708:android:6f2774ae34d682ab5315e9",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "fir-chat-9c443",
+          "appId": "1:455805989708:ios:9eb6ea515a6f95175315e9",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "fir-chat-9c443",
+          "appId": "1:455805989708:ios:9eb6ea515a6f95175315e9",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fir-chat-9c443",
+          "configurations": {
+            "android": "1:455805989708:android:6f2774ae34d682ab5315e9",
+            "ios": "1:455805989708:ios:9eb6ea515a6f95175315e9",
+            "macos": "1:455805989708:ios:9eb6ea515a6f95175315e9",
+            "web": "1:455805989708:web:97091ea82a4743775315e9",
+            "windows": "1:455805989708:web:5db39ee36bd5b43c5315e9"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
+    }
+  }
+}

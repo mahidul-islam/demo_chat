@@ -44,3 +44,6 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Firebase deploy
+.firebase/fir-chat-9c443/
