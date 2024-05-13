@@ -1,5 +1,5 @@
 import 'package:demo_chat/app/go_router.dart';
-import 'package:demo_chat/chat.dart';
+import 'package:demo_chat/chat_room/widget/chat.dart';
 import 'package:demo_chat/users/provider/users_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
