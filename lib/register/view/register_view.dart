@@ -1,4 +1,5 @@
 import 'package:demo_chat/app/go_router.dart';
+import 'package:demo_chat/login/provider/login_provider.dart';
 import 'package:demo_chat/register/provider/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,6 +13,9 @@ class RegisterScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final firstNameController = useTextEditingController();
+
+    final AuthenticationState loginState = ref.watch(authenticationProvider);
     // ref.listen(authErrorMessageProvider, (prev, next) {
     //   if (next.isNotEmpty) {
     //     ScaffoldMessenger.of(context).showSnackBar(
@@ -27,9 +31,14 @@ class RegisterScreen extends HookConsumerWidget {
 
     ref.listen(authenticationProvider, (previous, next) {
       if (next == AuthenticationState.success) {
-        // Navigate to home page
+        context.goNamed(Routes.users.name);
       } else if (next == AuthenticationState.error) {
-        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text('Something went wrong'),
+          ),
+        );
       }
     });
 
@@ -60,25 +69,46 @@ class RegisterScreen extends HookConsumerWidget {
             const SizedBox(
               height: 10,
             ),
-            Row(
+            TextField(
+              controller: firstNameController,
+              decoration: const InputDecoration(
+                helperText: 'First name',
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 MaterialButton(
                   color: Colors.amberAccent,
                   onPressed: () async {
                     if (emailController.text.isNotEmpty &&
-                        passwordController.text.isNotEmpty) {
+                        passwordController.text.isNotEmpty &&
+                        firstNameController.text.isNotEmpty) {
                       ref.read(authenticationProvider.notifier).register(
-                          emailController.text, passwordController.text);
+                          emailController.text,
+                          passwordController.text,
+                          firstNameController.text);
                     }
                   },
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: loginState != AuthenticationState.loading
+                      ? const Text(
+                          'Register',
+                          style: TextStyle(fontSize: 18),
+                        )
+                      : const CircularProgressIndicator(),
                 ),
                 const SizedBox(
                   width: 20,
+                  height: 20,
+                ),
+                const Text('Already have an account? Login by clicking below'),
+                const SizedBox(
+                  width: 20,
+                  height: 20,
                 ),
                 MaterialButton(
                   color: Colors.amberAccent,
@@ -86,7 +116,7 @@ class RegisterScreen extends HookConsumerWidget {
                     context.goNamed(Routes.login.name);
                   },
                   child: const Text(
-                    'Login now',
+                    'Login',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),

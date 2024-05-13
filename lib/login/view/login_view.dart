@@ -12,25 +12,11 @@ class LoginScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
-    // ref.listen(authErrorMessageProvider, (prev, next) {
-    //   if (next.isNotEmpty) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(next),
-    //       ),
-    //     );
-    //   } else {
-    //     emailController.text = '';
-    //     passwordController.text = '';
-    //   }
-    // });
-
     final AuthenticationState loginState = ref.watch(loginFunctionsProvider);
 
     ref.listen(loginFunctionsProvider, (previous, next) {
-      print(next);
       if (next == AuthenticationState.success) {
-        context.goNamed(Routes.register.name);
+        context.goNamed(Routes.users.name);
         // Go to chat
       } else if (next == AuthenticationState.error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +55,8 @@ class LoginScreen extends HookConsumerWidget {
             const SizedBox(
               height: 10,
             ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MaterialButton(
@@ -91,6 +78,13 @@ class LoginScreen extends HookConsumerWidget {
                 ),
                 const SizedBox(
                   width: 20,
+                  height: 20,
+                ),
+                const Text(
+                    'Do not have an account? Register by clicking below'),
+                const SizedBox(
+                  width: 20,
+                  height: 20,
                 ),
                 MaterialButton(
                   color: Colors.amberAccent,

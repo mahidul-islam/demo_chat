@@ -20,24 +20,13 @@ class LoginFunctions extends _$LoginFunctions {
   void login(String email, String password) async {
     try {
       state = AuthenticationState.loading;
-      final UserCredential credential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       state = AuthenticationState.success;
-      print(credential.toString());
-      // await FirebaseChatCore.instance.createUserInFirestore(
-      //   types.User(
-      //     firstName: _firstName,
-      //     id: credential.user!.uid,
-      //     imageUrl: 'https://i.pravatar.cc/300?u=$_email',
-      //     lastName: _lastName,
-      //   ),
-      // );
     } catch (e) {
       state = AuthenticationState.error;
-      print(e.toString());
     }
   }
 }

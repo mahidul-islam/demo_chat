@@ -1,14 +1,10 @@
+import 'package:demo_chat/login/provider/login_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 part 'register_provider.g.dart';
-
-enum AuthenticationState {
-  initial,
-  loading,
-  success,
-  error,
-}
 
 @riverpod
 class Authentication extends _$Authentication {
@@ -17,7 +13,7 @@ class Authentication extends _$Authentication {
     return AuthenticationState.initial;
   }
 
-  void register(String email, String password) async {
+  void register(String email, String password, String name) async {
     try {
       state = AuthenticationState.loading;
       final UserCredential credential =
@@ -26,18 +22,15 @@ class Authentication extends _$Authentication {
         password: password,
       );
       state = AuthenticationState.success;
-      print(credential.toString());
-      // await FirebaseChatCore.instance.createUserInFirestore(
-      //   types.User(
-      //     firstName: _firstName,
-      //     id: credential.user!.uid,
-      //     imageUrl: 'https://i.pravatar.cc/300?u=$_email',
-      //     lastName: _lastName,
-      //   ),
-      // );
+      await FirebaseChatCore.instance.createUserInFirestore(
+        types.User(
+          firstName: name,
+          id: credential.user!.uid,
+          imageUrl: 'https://i.pravatar.cc/300?u=$email',
+        ),
+      );
     } catch (e) {
       state = AuthenticationState.error;
-      print(e.toString());
     }
   }
 }
