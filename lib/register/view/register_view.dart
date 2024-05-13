@@ -1,3 +1,4 @@
+import 'package:demo_chat/app/go_router.dart';
 import 'package:demo_chat/register/provider/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -82,7 +83,7 @@ class RegisterScreen extends HookConsumerWidget {
                 MaterialButton(
                   color: Colors.amberAccent,
                   onPressed: () async {
-                    context.goNamed('login');
+                    context.goNamed(Routes.login.name);
                   },
                   child: const Text(
                     'Login now',
