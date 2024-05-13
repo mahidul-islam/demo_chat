@@ -32,6 +32,20 @@
   <title>demo_chat</title>
   <link rel="manifest" href="manifest.json">
 
+  <script type="module">
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js"; 
+    import {getAnalytics} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-analytics.js"; 
+    const firebaseConfig = { 
+      apiKey: "AIzaSyC2Yhes_GMb0GwzhFcb7R7-9oJvsOgS75Q",
+      appId: "1:455805989708:web:97091ea82a4743775315e9",
+      messagingSenderId: "455805989708",
+      projectId: "fir-chat-9c443",
+      authDomain: "fir-chat-9c443.firebaseapp.com",
+      storageBucket: "fir-chat-9c443.appspot.com",
+      measurementId: "G-78ET1HT906",
+    }; const app = initializeApp(firebaseConfig); const analytics = getAnalytics(app);
+  </script>
+
   <script>
     // The value below is injected by flutter build, do not touch.
     const serviceWorkerVersion = null;
