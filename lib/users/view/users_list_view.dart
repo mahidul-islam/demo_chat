@@ -1,5 +1,5 @@
 import 'package:demo_chat/app/go_router.dart';
-import 'package:demo_chat/chat_room/widget/chat.dart';
+import 'package:demo_chat/chat_room/provider/chat_room_provider.dart';
 import 'package:demo_chat/users/provider/users_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,16 +37,12 @@ class UserListScreen extends HookConsumerWidget {
                 child: MaterialButton(
                   padding: const EdgeInsets.all(20),
                   onPressed: () async {
-                    final navigator = Navigator.of(context);
-                    final room = await FirebaseChatCore.instance
-                        .createRoom(users[index]);
-                    await navigator.push(
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          room: room,
-                        ),
-                      ),
-                    );
+                    await FirebaseChatCore.instance
+                        .createRoom(users[index])
+                        .then((types.Room room) {
+                      ref.read(roomProvider.notifier).state = room;
+                      context.goNamed(Routes.room.name);
+                    });
                   },
                   child: Text(
                     users[index].firstName ?? '--',

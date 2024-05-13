@@ -27,7 +27,7 @@ final router = GoRouter(
     GoRoute(
       name: Routes.room.name,
       path: '/room',
-      builder: (context, state) => const ChatRoomScreen(),
+      builder: (context, state) => const ChatPage(),
     ),
   ],
 );

@@ -1,89 +1,142 @@
+import 'dart:io';
 import 'package:demo_chat/chat_room/provider/chat_room_provider.dart';
-import 'package:demo_chat/chat_room/widget/avatar_widget.dart';
-import 'package:demo_chat/chat_room/widget/chat.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
-class ChatRoomScreen extends HookConsumerWidget {
-  const ChatRoomScreen({super.key});
+class ChatPage extends HookConsumerWidget {
+  const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chatRoomStream = ref.watch(chatRoomStreamProvider);
-    final authUserStream = ref.watch(authUserStreamProvider);
+    final room = ref.watch(roomProvider.notifier).state;
+    final isAttachmentUploading = useState(false);
+
+    void handleImageSelection() async {
+      final result = await ImagePicker().pickImage(
+        imageQuality: 70,
+        maxWidth: 1440,
+        source: ImageSource.gallery,
+      );
+
+      if (result != null) {
+        isAttachmentUploading.value = true;
+
+        final size = await result.length();
+        final bytes = await result.readAsBytes();
+        final image = await decodeImageFromList(bytes);
+        final name = result.name;
+
+        try {
+          final reference = FirebaseStorage.instance.ref(name);
+          await reference.putData(bytes);
+          final uri = await reference.getDownloadURL();
+
+          final message = types.PartialImage(
+            height: image.height.toDouble(),
+            name: name,
+            size: size,
+            uri: uri,
+            width: image.width.toDouble(),
+          );
+
+          FirebaseChatCore.instance.sendMessage(
+            message,
+            room?.id ?? '',
+          );
+        } finally {
+          isAttachmentUploading.value = false;
+        }
+      }
+    }
+
+    void handleMessageTap(BuildContext _, types.Message message) async {
+      if (message is types.FileMessage) {
+        var localPath = message.uri;
+
+        if (message.uri.startsWith('http')) {
+          try {
+            final updatedMessage = message.copyWith(isLoading: true);
+            FirebaseChatCore.instance.updateMessage(
+              updatedMessage,
+              room?.id ?? '',
+            );
+
+            final client = http.Client();
+            final request = await client.get(Uri.parse(message.uri));
+            final bytes = request.bodyBytes;
+            final documentsDir =
+                (await getApplicationDocumentsDirectory()).path;
+            localPath = '$documentsDir/${message.name}';
+
+            if (!File(localPath).existsSync()) {
+              final file = File(localPath);
+              await file.writeAsBytes(bytes);
+            }
+          } finally {
+            final updatedMessage = message.copyWith(isLoading: false);
+            FirebaseChatCore.instance.updateMessage(
+              updatedMessage,
+              room?.id ?? '',
+            );
+          }
+        }
+
+        await OpenFilex.open(localPath);
+      }
+    }
+
+    void handlePreviewDataFetched(
+      types.TextMessage message,
+      types.PreviewData previewData,
+    ) {
+      final updatedMessage = message.copyWith(previewData: previewData);
+
+      FirebaseChatCore.instance.updateMessage(
+        updatedMessage,
+        room?.id ?? '',
+      );
+    }
+
+    void handleSendPressed(types.PartialText message) {
+      FirebaseChatCore.instance.sendMessage(
+        message,
+        room?.id ?? '',
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: authUserStream.when(
-              data: (User? user) {
-                return Text(user?.displayName ?? '--');
-              },
-              error: (Object error, StackTrace stackTrace) {
-                return const Text('Chat room');
-              },
-              loading: () {
-                return const CircularProgressIndicator();
-              },
-            ) ??
-            const Text('Chat room'),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        title: const Text('Chat'),
       ),
-      body: chatRoomStream.when(
-        data: (List<types.Room> rooms) {
-          if (rooms.isEmpty) {
-            return Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(
-                bottom: 200,
-              ),
-              child: const Text('No rooms'),
-            );
-          }
-          return ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              final room = rooms[index];
-
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(
-                        room: room,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      authUserStream.when(
-                            data: (User? user) {
-                              return AvatarWidget(user: user, room: room);
-                            },
-                            error: (Object error, StackTrace stackTrace) {
-                              return const SizedBox.shrink();
-                            },
-                            loading: () {
-                              return const SizedBox.shrink();
-                            },
-                          ) ??
-                          const SizedBox.shrink(),
-                      Text(room.name ?? ''),
-                    ],
-                  ),
-                ),
-              );
-            },
-            itemCount: rooms.length,
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text(e.toString())),
+      body: StreamBuilder<types.Room>(
+        initialData: room,
+        stream: FirebaseChatCore.instance.room(room?.id ?? ''),
+        builder: (context, snapshot) => StreamBuilder<List<types.Message>>(
+          initialData: const [],
+          stream: FirebaseChatCore.instance.messages(snapshot.data!),
+          builder: (context, snapshot) => Chat(
+            isAttachmentUploading: isAttachmentUploading.value,
+            messages: snapshot.data ?? [],
+            onAttachmentPressed: handleImageSelection,
+            onMessageTap: handleMessageTap,
+            onPreviewDataFetched: handlePreviewDataFetched,
+            onSendPressed: handleSendPressed,
+            user: types.User(
+              id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+            ),
+          ),
+        ),
       ),
     );
   }
