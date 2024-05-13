@@ -31,7 +31,7 @@ class RegisterScreen extends HookConsumerWidget {
 
     ref.listen(authenticationProvider, (previous, next) {
       if (next == AuthenticationState.success) {
-        context.goNamed(Routes.users.name);
+        context.pushReplacementNamed(Routes.users.name);
       } else if (next == AuthenticationState.error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -113,7 +113,7 @@ class RegisterScreen extends HookConsumerWidget {
                 MaterialButton(
                   color: Colors.amberAccent,
                   onPressed: () async {
-                    context.goNamed(Routes.login.name);
+                    context.pushReplacementNamed(Routes.login.name);
                   },
                   child: const Text(
                     'Login',

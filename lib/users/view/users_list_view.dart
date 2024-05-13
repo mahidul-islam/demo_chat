@@ -18,8 +18,9 @@ class UserListScreen extends HookConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          context.goNamed(Routes.login.name);
-          await FirebaseAuth.instance.signOut();
+          await FirebaseAuth.instance.signOut().then(
+                (value) => context.pushReplacementNamed(Routes.login.name),
+              );
         },
         child: const Icon(Icons.logout),
       ),

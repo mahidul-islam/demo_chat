@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:demo_chat/app/go_router.dart';
 import 'package:demo_chat/chat_room/provider/chat_room_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -116,6 +118,10 @@ class ChatPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () => context.pushReplacementNamed(Routes.users.name),
+        ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
         title: const Text('Chat'),
       ),
