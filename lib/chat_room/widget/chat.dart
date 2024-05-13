@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +7,6 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -28,80 +25,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
 
-  void _handleAtachmentPressed() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) => SafeArea(
-        child: SizedBox(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Photo'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _handleFileSelection() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-    );
-
-    if (result != null && result.files.single.path != null) {
-      _setAttachmentUploading(true);
-      final name = result.files.single.name;
-      final filePath = result.files.single.path!;
-      final file = File(filePath);
-
-      try {
-        final reference = FirebaseStorage.instance.ref(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
-
-        final message = types.PartialFile(
-          mimeType: lookupMimeType(filePath),
-          name: name,
-          size: result.files.single.size,
-          uri: uri,
-        );
-
-        FirebaseChatCore.instance.sendMessage(message, widget.room.id);
-        _setAttachmentUploading(false);
-      } finally {
-        _setAttachmentUploading(false);
-      }
-    }
-  }
-
   void _handleImageSelection() async {
     final result = await ImagePicker().pickImage(
       imageQuality: 70,
@@ -111,15 +34,16 @@ class _ChatPageState extends State<ChatPage> {
 
     if (result != null) {
       _setAttachmentUploading(true);
-      final file = File(result.path);
-      final size = file.lengthSync();
+      // final file = File(result.path);
+      final size = await result.length();
       final bytes = await result.readAsBytes();
       final image = await decodeImageFromList(bytes);
       final name = result.name;
 
       try {
         final reference = FirebaseStorage.instance.ref(name);
-        await reference.putFile(file);
+        // await reference.putFile(file);
+        await reference.putData(bytes);
         final uri = await reference.getDownloadURL();
 
         final message = types.PartialImage(
@@ -213,7 +137,7 @@ class _ChatPageState extends State<ChatPage> {
             builder: (context, snapshot) => Chat(
               isAttachmentUploading: _isAttachmentUploading,
               messages: snapshot.data ?? [],
-              onAttachmentPressed: _handleAtachmentPressed,
+              onAttachmentPressed: _handleImageSelection,
               onMessageTap: _handleMessageTap,
               onPreviewDataFetched: _handlePreviewDataFetched,
               onSendPressed: _handleSendPressed,
