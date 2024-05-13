@@ -7,7 +7,6 @@ import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:go_router/go_router.dart';
 
 import 'chat.dart';
-import 'users.dart';
 import 'util.dart';
 
 class RoomsPage extends StatefulWidget {
@@ -101,12 +100,7 @@ class _RoomsPageState extends State<RoomsPage> {
             onPressed: _user == null
                 ? null
                 : () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        fullscreenDialog: true,
-                        builder: (context) => const UsersPage(),
-                      ),
-                    );
+                    context.goNamed(Routes.users.name);
                   },
           ),
         ],

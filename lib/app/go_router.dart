@@ -1,7 +1,7 @@
 import 'package:demo_chat/login/view/login_view.dart';
 import 'package:demo_chat/register/view/register_view.dart';
 import 'package:demo_chat/rooms.dart';
-import 'package:demo_chat/users.dart';
+import 'package:demo_chat/users/view/users_list_view.dart';
 import 'package:go_router/go_router.dart';
 
 enum Routes { login, register, users, room }
@@ -22,7 +22,7 @@ final router = GoRouter(
     GoRoute(
       name: Routes.users.name,
       path: '/users',
-      builder: (context, state) => const UsersPage(),
+      builder: (context, state) => const UserListScreen(),
     ),
     GoRoute(
       name: Routes.room.name,
