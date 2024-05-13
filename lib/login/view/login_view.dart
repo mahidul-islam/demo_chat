@@ -25,6 +25,23 @@ class LoginScreen extends HookConsumerWidget {
     //   }
     // });
 
+    final AuthenticationState loginState = ref.watch(loginFunctionsProvider);
+
+    ref.listen(loginFunctionsProvider, (previous, next) {
+      print(next);
+      if (next == AuthenticationState.success) {
+        context.goNamed(Routes.register.name);
+        // Go to chat
+      } else if (next == AuthenticationState.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text('Something went wrong'),
+          ),
+        );
+      }
+    });
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -65,10 +82,12 @@ class LoginScreen extends HookConsumerWidget {
                           .login(emailController.text, passwordController.text);
                     }
                   },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: loginState != AuthenticationState.loading
+                      ? const Text(
+                          'Login',
+                          style: TextStyle(fontSize: 18),
+                        )
+                      : const CircularProgressIndicator(),
                 ),
                 const SizedBox(
                   width: 20,
