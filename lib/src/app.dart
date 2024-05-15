@@ -1,4 +1,4 @@
-import 'package:demo_chat/app/go_router.dart';
+import 'package:demo_chat/src/routing/go_router.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {

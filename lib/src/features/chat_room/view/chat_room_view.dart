@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:demo_chat/app/go_router.dart';
-import 'package:demo_chat/chat_room/provider/chat_room_provider.dart';
+import 'package:demo_chat/src/routing/go_router.dart';
+import 'package:demo_chat/src/features/chat_room/provider/chat_room_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

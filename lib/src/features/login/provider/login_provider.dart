@@ -1,14 +1,8 @@
+import 'package:demo_chat/src/constants/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'login_provider.g.dart';
-
-enum AuthenticationState {
-  initial,
-  loading,
-  success,
-  error,
-}
 
 @riverpod
 class LoginFunctions extends _$LoginFunctions {

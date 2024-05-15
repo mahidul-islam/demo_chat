@@ -1,7 +1,7 @@
-import 'package:demo_chat/chat_room/view/chat_room_view.dart';
-import 'package:demo_chat/login/view/login_view.dart';
-import 'package:demo_chat/register/view/register_view.dart';
-import 'package:demo_chat/users/view/users_list_view.dart';
+import 'package:demo_chat/src/features/chat_room/view/chat_room_view.dart';
+import 'package:demo_chat/src/features/login/view/login_view.dart';
+import 'package:demo_chat/src/features/register/view/register_view.dart';
+import 'package:demo_chat/src/features/users/view/users_list_view.dart';
 import 'package:go_router/go_router.dart';
 
 enum Routes { login, register, users, room }

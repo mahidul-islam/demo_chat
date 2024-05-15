@@ -1,6 +1,6 @@
-import 'package:demo_chat/app/go_router.dart';
-import 'package:demo_chat/login/provider/login_provider.dart';
-import 'package:demo_chat/register/provider/register_provider.dart';
+import 'package:demo_chat/src/constants/enums.dart';
+import 'package:demo_chat/src/routing/go_router.dart';
+import 'package:demo_chat/src/features/register/provider/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -16,18 +16,6 @@ class RegisterScreen extends HookConsumerWidget {
     final firstNameController = useTextEditingController();
 
     final AuthenticationState loginState = ref.watch(authenticationProvider);
-    // ref.listen(authErrorMessageProvider, (prev, next) {
-    //   if (next.isNotEmpty) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(next),
-    //       ),
-    //     );
-    //   } else {
-    //     emailController.text = '';
-    //     passwordController.text = '';
-    //   }
-    // });
 
     ref.listen(authenticationProvider, (previous, next) {
       if (next == AuthenticationState.success) {
